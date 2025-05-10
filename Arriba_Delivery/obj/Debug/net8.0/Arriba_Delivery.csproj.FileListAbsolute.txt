@@ -1,0 +1,28 @@
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.exe
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.deps.json
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.runtimeconfig.json
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.dll
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.pdb
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.AssemblyInfoInputs.cache
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.AssemblyInfo.cs
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.csproj.CoreCompileInputs.cache
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.dll
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/refint/Arriba_Delivery.dll
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.pdb
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.genruntimeconfig.cache
+C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/ref/Arriba_Delivery.dll
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.deps.json
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.runtimeconfig.json
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.dll
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/bin/Debug/net8.0/Arriba_Delivery.pdb
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.GeneratedMSBuildEditorConfig.editorconfig
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.AssemblyInfoInputs.cache
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.AssemblyInfo.cs
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.csproj.CoreCompileInputs.cache
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.dll
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/refint/Arriba_Delivery.dll
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.pdb
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.genruntimeconfig.cache
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/ref/Arriba_Delivery.dll

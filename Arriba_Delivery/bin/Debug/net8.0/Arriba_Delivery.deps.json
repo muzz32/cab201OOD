@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Arriba_Delivery/1.0.0": {
+        "runtime": {
+          "Arriba_Delivery.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Arriba_Delivery/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
