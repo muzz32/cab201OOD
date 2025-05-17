@@ -9,6 +9,12 @@ namespace Arriba_Delivery
 {
     class Consts
     {
+        public enum UserType
+        {
+            Customer,
+            Deliverer,
+            Client
+        }
         public static readonly string[] start_menu =
         [
             "Login as a registered user",

@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text.RegularExpressions;
 
 namespace Arriba_Delivery
 {
@@ -18,88 +8,62 @@ namespace Arriba_Delivery
         public string location { get; private set; } 
         public int style { get; private set; }
         public string rating {  get; private set; } 
-        public List<Food> menuitems { get; private set; } = new List<Food>();
-        public List<Review> reviews { get; private set; } = new List<Review>();
-        public List<Order> orders { get; private set; } = new List<Order>();
-        public Client(List<User> users) : base(users)
+        public List<Food> menuitems { get; } 
+        public List<Review> reviews { get; }
+        public List<Order> orders { get; } 
+
+        public Client()
         {
-            bool valid = true;
-            string restaurant;
-            string location;
-            int style;
-            do
-            {
-                CMD.Display("Please enter your restaurant's name:");
-                restaurant = CMD.StrIn("Invalid restaurant name.", "Please enter your restaurant's name:");
-                if (!Regex.IsMatch(restaurant, @"^(?=.*\S).*$"))
-                {
-                    CMD.Display("Invalid restaurant name.");
-                    valid = false;
-                }
-                else
-                {
-                    valid = true;
-                }
-            } while (!valid);
-
-
-            style = CMD.Choice("Please select your restaurant's style:", Consts.styles);
-            do
-            {
-                CMD.Display("Please enter your location(in the form of X, Y):");
-                location = CMD.StrIn("Invalid location.", "Please enter your location(in the form of X, Y):");
-                if (!Regex.IsMatch(location, @"^[0-9]+,[0-9]+$"))
-                {
-                    CMD.Display("Invalid location.");
-                    valid = false;
-                }
-                else
-                {
-                    valid = true;
-                }
-            } while (!valid);
-
-            this.restaurant = restaurant;
-            this.style = style;
-            this.location = location;
+            restaurant = "";
+            location = "";
+            style = 0;
             rating = "-";
-            CMD.Display("You have been successfully registered as a client, " + name + "!");
+            menuitems = [];
+            reviews = [];
+            orders = [];
         }
 
-
-        public override void Getinfo()
+        public Client(string name, int age, string mobile, string email, string password, string restaurant, string location, int style) : 
+            base(name, age, mobile, email, password)
         {
-            base.Getinfo();
-            CMD.Display("Restaurant name: " + restaurant);
-            CMD.Display("Restaurant style: " + Consts.styles[style - 1]);
-            CMD.Display("Restaurant location: " + location);
+            this.restaurant = restaurant;
+            this.location = location;
+            this.style = style;
+            rating = "-";
+            menuitems = [];
+            reviews = [];
+            orders = [];
         }
 
-        public void DisplayReviews()
+        
+        public override string Getinfo()
         {
-            if (reviews.Count == 0)
+            string start = base.Getinfo();
+            return start + 
+            "\nRestaurant name: " + restaurant +
+            "\nRestaurant style: " + Consts.styles[style - 1] +
+            "\nRestaurant location: " + location;
+        }
+
+        public static List<Client> SortedRestaurant(List<User> users, Func<Client, object> sorter, bool descending = false) 
+        {
+            List<Client> options;
+            if (!descending)
             {
-                CMD.Display("No reviews have been left for this restaurant.");
+                options = users.OfType<Client>().OrderBy(sorter).ThenBy(client => client.restaurant).ToList();
             }
             else
             {
-                foreach (Review review in reviews)
-                {
-                    CMD.Display("Reviewer: " + review.reviewer);
-                    CMD.Display("Rating: " + review.starrating);
-                    CMD.Display("Comment: " + review.comment);
-                }
+                options = users.OfType<Client>().OrderByDescending(sorter).ThenBy(client => client.restaurant).ToList();
             }
+            return options; 
         }
+        
+        
 
-        public string[] GetMenuStr() 
+        public string[] GetMenuStr()
         {
-            List<string> stringitems = new List<string>();
-            foreach (Food food in menuitems)
-            {
-                stringitems.Add($"${food.price.ToString("F2")}  {food.name}");
-            }
-            return stringitems.ToArray();
+            return CMD.FormatedList(menuitems, food =>$"${food.price:F2}  {food.name}");
         }
         public void DisplayMenu(string msg)
         {
@@ -109,43 +73,17 @@ namespace Arriba_Delivery
                 CMD.Display($"${food.price.ToString("F2")}  {food.name}");
             }
         }
-        public void AddItem()
+        public string AddItem()
         {
-            string name;
-            float price;
-            do
+            string foodname = CMD.ValidateInput(@"^[a-zA-Z-,' ]+$", "Please enter the name of the new item (blank to cancel):", "Invalid item name.", false);
+            if (!Regex.IsMatch(foodname, @"^\s*$"))
             {
-                CMD.Display("Please enter the name of the new item (blank to cancel):");
-                name = CMD.EmptyStrIn();
-                if(Regex.IsMatch(name, @"^\s*$"))
-                {
-                    return;
-                }
-                else if (!Regex.IsMatch(name, @"^[a-zA-Z-,' ]+$"))
-                {
-                    CMD.Display("Invalid name.");
-                }
-                else
-                {
-                    break;
-                }
-            } while (true);
-            do
-            {
-                CMD.Display("Please enter the price of the new item(without the $):");
-                price = CMD.FloatIn("Invalid price.", "Please enter the price of the new item(without the $):");
-                if (price < 0 || price > 999.99)
-                {
-                    CMD.Display("Invalid price.");
-                }
-                else
-                {
-                    break;
-                }
-            } while (true);
-            Food food = new Food(name, price, 1);
-            CMD.Display($"Successfully added {food.name} (${food.price.ToString("F2")}) to menu.");
-            menuitems.Add(food);
+                float price = CMD.ValidateInput(0f,999.99f,"Please enter the price of the new item(without the $):", "Invalid price.");
+                Food food = new Food(foodname, price);
+                menuitems.Add(food);
+                return $"Successfully added {food.name} (${food.price:F2}) to menu.";
+            }
+            return "";
         }
 
         
@@ -154,20 +92,6 @@ namespace Arriba_Delivery
             orders.Add(order);
         }
 
-        public void DisplayOrders()
-        {
-            if (orders.Count == 0)
-            {
-                CMD.Display("Your restaurant has no current orders.");
-            }
-            else
-            {
-                foreach (Order order in orders)
-                {
-                    order.GetInfoClient();
-                }
-            }
-        }
         
         public void ProcessOrder(int processtype, int status)
         {

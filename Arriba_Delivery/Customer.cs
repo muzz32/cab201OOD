@@ -17,50 +17,30 @@ namespace Arriba_Delivery
     class Customer : User
     {
         public string location { get; private set; }
-        public List<Order> orders { get; private set; } = new List<Order>();
-        public float moneyspent { get; private set; } = 0f;
-        public Customer(List<User> users) : base(users)
+        public List<Order> orders { get; private set; } 
+        public float moneyspent { get; private set; }
+        
+        public Customer()  
         {
-            bool valid = true;
-            string location;
-            do
-            {
-                CMD.Display("Please enter your location(in the form of X, Y):");
-                location = CMD.StrIn("Invalid location.", "Please enter your location(in the form of X, Y):");
-                if (!Regex.IsMatch(location, @"^[0-9]+,[0-9]+$"))
-                {
-                    CMD.Display("Invalid location.");
-                    valid = false;
-                }
-                else
-                {
-                    valid = true;
-                }
-            } while (!valid);
+            location = "";
+            orders = new List<Order>();
+            moneyspent = 0f; 
+        }
+
+        public Customer(string name, int age, string mobile, string email, string password, string location) : base(name, age, mobile,
+            email, password)
+        {
             this.location = location;
-            CMD.Display("You have been successfully registered as a customer, " + name +"!");
+            orders = new List<Order>();
+            moneyspent = 0f;
         }
-
-        public override void Getinfo()
+        
+        public override string Getinfo()
         {
-            base.Getinfo();
-            CMD.Display("Location: " + location);
-            CMD.Display($"You've made {orders.Count} order(s) and spent a total of ${moneyspent.ToString("F2")} here.");
-        }
-
-
-        public List<Client> SortedRestaurant(List<User> users, Func<Client, object> sorter, bool descending = false) 
-        {
-            List<Client> options = new List<Client>();
-            if (!descending)
-            {
-                options = users.OfType<Client>().OrderBy(sorter).ThenBy(client => client.restaurant).ToList();
-            }
-            else
-            {
-                options = users.OfType<Client>().OrderByDescending(sorter).ThenBy(client => client.restaurant).ToList();
-            }
-            return options; 
+            string start = base.Getinfo();
+            return start + 
+                   "\nLocation: " + location +
+                   $"\nYou've made {orders.Count} order(s) and spent a total of ${moneyspent.ToString("F2")} here.";
         }
 
         public string[] DisplayClients(List<Client> rawclients)
@@ -83,11 +63,12 @@ namespace Arriba_Delivery
         {
             float totalprice = 0;
             int length = client.menuitems.Count;
-            int quantity;
             List<Food> items = new List<Food>();
+            
+            string[] options = client.GetMenuStr().Concat(["Complete order", "Cancel order"]).ToArray();
             do
             {
-                int choice = CMD.Choice("Current order total: $" + totalprice.ToString("F2"), client.GetMenuStr().Concat(["Complete order", "Cancel order" ]).ToArray());
+                int choice = CMD.Choice("Current order total: $" + totalprice.ToString("F2"), options);
                 if (choice == length + 1)
                 {
                     Order order = new Order(client, totalprice, items, allorders.Count + 1, this);
@@ -95,58 +76,29 @@ namespace Arriba_Delivery
                     orders.Add(order);
                     return true;
                 }
-                else if (choice == length + 2)
+                if (choice == length + 2)
                 {
                     return false;
                 }
-                else
+                Food selecteditem = client.menuitems[choice - 1];
+                CMD.Display($"Adding {selecteditem.name} to order.");
+                int quantity = CMD.ValidateInput(0, Int32.MaxValue, "Please enter quantity (0 to cancel):", "Invalid quantity.");
+                if (quantity > 0)
                 {
-                    Food selecteditem = client.menuitems[choice - 1];
-                    CMD.Display($"Adding {selecteditem.name} to order.");
-                    do
+                    Food? existingitem = items.Find(food => food.name == selecteditem.name);
+                    if (existingitem != null)
                     {
-                        CMD.Display("Please enter quantity (0 to cancel):");
-                        quantity = CMD.IntIn("Invalid quantity.", "Please enter quantity (0 to cancel):");
-                        if (quantity <= 0)
-                        {
-                            if (quantity == 0) break; 
-                            CMD.Display("Invalid quantity.");
-                        }
-                        else break; 
-                    } while (true);
-
-                    if (quantity > 0)
-                    {
-                        Food? existingitem = items.Find(food => food.name == selecteditem.name);
-                        if (existingitem != null)
-                        {
-                            existingitem.ChangeQuantity(existingitem.quantity + quantity);
-                        }
-                        else
-                        {
-                            Food ordereditem = new Food(selecteditem.name, selecteditem.price, quantity);
-                            items.Add(ordereditem);
-                        }
-                        CMD.Display($"Added {quantity} x {selecteditem.name} to order.");
-                        totalprice += selecteditem.price * quantity;
+                        existingitem.ChangeQuantity(existingitem.quantity + quantity);
                     }
+                    else
+                    {
+                        Food ordereditem = new Food(selecteditem.name, selecteditem.price, quantity);
+                        items.Add(ordereditem);
+                    }
+                    CMD.Display($"Added {quantity} x {selecteditem.name} to order.");
+                    totalprice += selecteditem.price * quantity;
                 }
             } while (true);
-        }
-
-        public void DisplayOrders()
-        {
-            if (orders.Count == 0)
-            {
-                CMD.Display("You have not placed any orders.");
-            }
-            else
-            {
-                foreach (Order order in orders)
-                {
-                    order.GetInfoCustomer();
-                }
-            }
         }
 
         public void LeaveReview()
@@ -158,14 +110,8 @@ namespace Arriba_Delivery
             {
                 Order selectedorder = finishedOrders[choice - 1];
                 CMD.Display($"You are rating order #{selectedorder.id} from {selectedorder.restaurant}:");
-                selectedorder.GetContents();
-                int rating;
-                do
-                {
-                    CMD.Display("Please enter a rating for this restaurant (1-5, 0 to cancel):");
-                    rating = CMD.IntIn("Invalid rating", "Please enter a rating for this restaurant (1-5, 0 to cancel):");
-                } while (rating is < 0 or > 5);
-
+                CMD.Display(selectedorder.GetContents());
+                int rating = CMD.ValidateInput(0, 5, "Please enter a rating for this restaurant (1-5, 0 to cancel):","Invalid rating");
                 if (rating > 0)
                 {
                     CMD.Display("Please enter a comment to accompany this rating:");
@@ -178,7 +124,7 @@ namespace Arriba_Delivery
             }
         }
         
-        private List<Order> GetFinishedOrders()
+        public List<Order> GetFinishedOrders()
         {
             List<Order> listorders = new List<Order>();
             foreach (Order order in orders) 

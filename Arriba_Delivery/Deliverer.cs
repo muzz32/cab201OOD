@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Numerics;
@@ -15,38 +16,32 @@ namespace Arriba_Delivery
         public string licence {get; private set;}
         private string location;
         public Order? joborder {get; private set;}
-        public Deliverer(List<User> users) : base(users)
+        public Deliverer()
         {
-            bool valid = true;
-            string licence;
-            do
-            {
-                CMD.Display("Please enter your licence plate:");
-                licence = CMD.StrIn("Invalid licence plate.", "Please enter your licence plate:");
-                if (!Regex.IsMatch(licence, @"^(?=.*[A-Z0-9])[A-Z0-9 ]{1,8}$"))
-                {
-                    CMD.Display("Invalid licence plate.");
-                    valid = false;
-                }
-                else
-                {
-                    valid = true;
-                }
-            } while (!valid);
+            licence = "";
+            location = "";
+            joborder = null;
+        }
+
+        public Deliverer(string name, int age, string mobile, string email, string password, string licence) : 
+            base(name, age, mobile, email, password)
+        {
             this.licence = licence;
             location = "";
             joborder = null;
-            CMD.Display("You have been successfully registered as a deliverer, " + name + "!");
         }
 
-        public override void Getinfo()
+        public override string Getinfo()
         {
-            base.Getinfo();
-            CMD.Display("Licence plate: "+licence);
+            string output = base.Getinfo();
+            output += "\nLicence plate: "+licence;
             if (joborder != null)
             {
-             CMD.Display($"Current delivery:\nOrder #{joborder.id} from {joborder.restaurant} at {joborder.restaurantlocation}.\nTo be delivered to {joborder.customer} at {joborder.customerlocation}.");   
+             output +=$"\nCurrent delivery:" +
+                         $"\nOrder #{joborder.id} from {joborder.restaurant} at {joborder.restaurantlocation}." +
+                         $"\nTo be delivered to {joborder.customer} at {joborder.customerlocation}.";   
             }
+            return output;
         }
 
         public void GetJob(List<Order> currorders)

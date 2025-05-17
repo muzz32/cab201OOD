@@ -26,3 +26,4 @@ C:/Users/murra/Documents/uni/sem 2/cab201/Programming/Arriba_Delivery/Arriba_Del
 /home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.pdb
 /home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.genruntimeconfig.cache
 /home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/ref/Arriba_Delivery.dll
+/home/murrayp/Documents/uni/cab201/Arriba_Delivery/Arriba_Delivery/obj/Debug/net8.0/Arriba_Delivery.sourcelink.json

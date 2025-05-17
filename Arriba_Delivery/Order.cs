@@ -22,6 +22,21 @@ namespace Arriba_Delivery
         public bool customerreviewded { get; private set; }
         public Client client { get; private set; }
 
+        public Order()
+        {
+            price = 0;
+            items = new List<Food>();
+            id = 0;
+            status = "";
+            restaurant = "";
+            restaurantlocation = "";
+            delivererarrived = false;
+            customer = "";
+            customerlocation = "";
+            customerreviewded = false;
+            client = new Client();
+        }
+        
         public Order(Client client, float price, List<Food> items, int id, Customer customer)
         {
             this.price = price;
@@ -38,30 +53,33 @@ namespace Arriba_Delivery
             CMD.Display("Your order has been placed. Your order number is #" + id + ".");
         }
 
-        public void GetContents()
+        public string GetContents()
         {
+            string output = "";
             foreach (Food food in items)
             {
-                CMD.Display(food.quantity + " x " + food.name);
+                output+= food.quantity + " x " + food.name +"\n";
             }
+
+            return output;
         }
-        public void GetInfoCustomer()
+        public string GetInfoCustomer()
         {
-            CMD.Display($"Order #{id} from {restaurant}: {status}");
+            string output = $"Order #{id} from {restaurant}: {status}";
             if(status == "Delivered")
             {
-                CMD.Display($"This order was delivered by {deliverer} (licence plate: {licence})");
+                output +=$"This order was delivered by {deliverer} (licence plate: {licence})";
             }
-            GetContents();
+            return output + GetContents();
         }
-        public void GetInfoClient()
+        public string GetInfoClient()
         {
-            CMD.Display($"Order #{id} for {customer}: {status}");
+            string output = $"Order #{id} for {customer}: {status}";
             if(status == "Delivered")
             {
-                CMD.Display($"This order was delivered by {deliverer} (licence plate: {licence})");
+                output += $"\nThis order was delivered by {deliverer} (licence plate: {licence})";
             }
-            GetContents();
+            return output +"\n"+ GetContents();
         }
         public string GetStatusString()
         {
@@ -86,8 +104,8 @@ namespace Arriba_Delivery
             status = Consts.status[newstatus];
             if (newstatus == 1)
             {
-                CMD.Display($"Order #{id} is now marked as cooking. Please prepare the order, then mark it as finished cooking:");
-                GetContents();
+                CMD.Display($"Order #{id} is now marked as cooking. Please prepare the order, then mark it as finished cooking:\n"+GetContents());
+                
             }
             else if (newstatus == 2)
             {

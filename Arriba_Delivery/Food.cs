@@ -17,7 +17,7 @@ namespace Arriba_Delivery
 
         public int quantity { get; private set; }
        
-        public Food(string name, float price, int quantity)
+        public Food(string name, float price, int quantity = 1)
         {
             this.name = name;
             this.price = price;

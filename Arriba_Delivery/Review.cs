@@ -25,5 +25,10 @@ namespace Arriba_Delivery
             }
             starrating = tempstar;
         }
+
+        public string GetInfo()
+        {
+            return "Reviewer: " + reviewer + "\nRating: " + starrating + "\nComment: " + comment;
+        }
     }
 }

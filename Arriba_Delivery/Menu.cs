@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -53,7 +54,6 @@ namespace Arriba_Delivery
             CMD.Display("Password:");
             string loginpasswd = CMD.StrIn("Invalid password.", "Password:");
             User? registereduser = null;
-
             foreach(User user in users)
             {
                 if (user.email == loginemail && user.password == loginpasswd)
@@ -85,34 +85,41 @@ namespace Arriba_Delivery
             switch (CMD.Choice("Which type of user would you like to register as?", Consts.reg_menu))
             {
                 case 1:
-                    CustomerReg();
+                    UserReg(Consts.UserType.Customer);
                     break;
                 case 2:
-                    DelivererReg();
+                    UserReg(Consts.UserType.Deliverer);
                     break;
                 case 3:
-                    ClientReg();
+                    UserReg(Consts.UserType.Client);
                     break;
                 case 4:
                     return;
             }
         }
-        private void CustomerReg()
-        {   
-            Customer customer = new Customer(users);
-            users.Add(customer);
-        }
-        private void DelivererReg() 
-        {
-            Deliverer deliverer = new Deliverer(users);
-            users.Add(deliverer);
-        }
-        private void ClientReg() 
-        {
-            Client client = new Client(users);
-            users.Add(client);
-        } 
 
+        private void UserReg(Consts.UserType userType)
+        {
+            User? registereduser = null;
+            switch (userType)
+            {
+                case Consts.UserType.Customer: 
+                    registereduser = Register.Customer(users);
+                    break;
+                case Consts.UserType.Deliverer: 
+                    registereduser = Register.Deliverer(users);
+                    break;
+                case Consts.UserType.Client:
+                    registereduser = Register.Client(users);
+                    break;
+            }
+            if (registereduser != null)
+            {
+                CMD.Display($"You have been successfully registered as a {userType.ToString().ToLower()},  {registereduser.name}!");
+                users.Add(registereduser);
+            }
+        }
+        
         private void CustomerMenu(Customer customer)
         {
             customer.WelcomeMsg();
@@ -121,13 +128,13 @@ namespace Arriba_Delivery
                 switch (CMD.Choice("Please make a choice from the menu below:", Consts.customer_menu))
                 {
                     case 1:
-                        customer.Getinfo();
+                        CMD.Display(customer.Getinfo());
                         break;
                     case 2:
                         PickResturantSort(customer);
                         break;
                     case 3:
-                        customer.DisplayOrders(); 
+                        CMD.DisplayObjects(customer.orders, order => order.GetInfoCustomer(),"You have not placed any orders.");
                         break;
                     case 4:
                         customer.LeaveReview();
@@ -149,16 +156,16 @@ namespace Arriba_Delivery
             switch (CMD.Choice("How would you like the list of restaurants ordered?", Consts.restaurant_sort_menu))
             {
                 case 1:
-                    clients = customer.SortedRestaurant(users, client => client.restaurant);
+                    clients = Client.SortedRestaurant(users, client => client.restaurant);
                     break;
                 case 2:
-                    clients = customer.SortedRestaurant(users, client => customer.GetDistance(customer.location, client.location));
+                    clients = Client.SortedRestaurant(users, client => User.GetDistance(customer.location, client.location));
                     break;
                 case 3:
-                    clients = customer.SortedRestaurant(users, client => client.style);
+                    clients = Client.SortedRestaurant(users, client => client.style);
                     break;
                 case 4:
-                    clients = customer.SortedRestaurant(users, client => client.rating, true);
+                    clients = Client.SortedRestaurant(users, client => client.rating, true);
                     break;
                 case 5:
                     return; 
@@ -184,13 +191,14 @@ namespace Arriba_Delivery
                         }
                         break;
                     case 2:
-                        client.DisplayReviews();
+                        CMD.DisplayObjects(client.reviews, review => review.GetInfo()+"\n", "No reviews have been left for this restaurant.");
                         break;
                     case 3:
                         return;
                 }
             } while(true);
         }
+        
 
         private void DelivererMenu(Deliverer deliverer)
         {
@@ -200,7 +208,7 @@ namespace Arriba_Delivery
                 switch (CMD.Choice("Please make a choice from the menu below:", Consts.deliverer_menu))
                 {
                     case 1:
-                        deliverer.Getinfo();
+                        CMD.Display(deliverer.Getinfo());
                         break;
                     case 2:
                         deliverer.GetJob(currorders);
@@ -229,14 +237,15 @@ namespace Arriba_Delivery
                 switch (CMD.Choice("Please make a choice from the menu below:", Consts.client_menu))
                 {
                     case 1:
-                       client.Getinfo();
+                        CMD.Display(client.Getinfo());
                         break;
                     case 2:  
                         client.DisplayMenu("This is your restaurant's current menu:");
-                        client.AddItem();
+                        string newfood = client.AddItem();
+                        CMD.Display(newfood);
                         break;
                     case 3:
-                        client.DisplayOrders();
+                        CMD.DisplayObjects(client.orders, order => order.GetInfoClient(), "Your restaurant has no current orders.");
                         break;
                     case 4:
                         client.ProcessOrder(0,0);
