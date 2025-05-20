@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace Arriba_Delivery
+﻿namespace Arriba_Delivery
 {
     /// <summary>
     /// An abstract user class. Contains all universal user attributes such as name, age, mobile, email and
@@ -13,73 +6,57 @@ namespace Arriba_Delivery
     /// </summary>
     abstract class User
     {
-        public string name { get; protected set; }
-        public int age { get; protected set; }
-        public string mobile { get; protected set; }
-        public string email { get; protected set; }
-        public string password { get; protected set; }
+        public string Name { get; } //The users name
+        public int Age { get; } //The users age
+        public string Mobile { get;  } //The users phone number
+        public string Email { get;  } // The users email
+        public string Password { get;  } //The users password
         
+        /// <summary>
+        /// A default constructor to be used
+        /// by all child users
+        /// </summary>
         protected User()
         {
-            name = "";
-            age = 0;
-            mobile = "";
-            email = "";
-            password = ""; 
+            Name = "";
+            Age = 0;
+            Mobile = "";
+            Email = "";
+            Password = ""; 
         }
 
+        /// <summary>
+        /// A constructor to be inherited by all child users
+        /// </summary>
         protected User(string name, int age, string mobile, string email, string password)
         {
-            this.name = name;
-            this.age = age;
-            this.mobile = mobile;
-            this.email = email;
-            this.password = password;
+            this.Name = name;
+            this.Age = age;
+            this.Mobile = mobile;
+            this.Email = email;
+            this.Password = password;
         }
         
-        public void WelcomeMsg()
+        /// <summary>
+        /// A welcome message for all users
+        /// </summary>
+        /// <returns>A message as a string</returns>
+        public string WelcomeMsg()
         {
-            CMD.Display($"Welcome back, {name}!");
+            return $"Welcome back, {Name}!";
         }
         
         /// <summary>
         /// Gets universal user info.
         /// </summary>
         /// <returns>A string for methods such as Display to handle</returns>
-        public virtual string Getinfo() 
+        public virtual string GetInfo() 
         {
             return "Your user details are as follows:" +
-                "\nName: " + name + "" +
-                "\nAge: " + age + "" +
-                "\nEmail: " + email + "" +
-                "\nMobile: " + mobile;
-        }
-        
-        /// <summary>
-        /// A function the finds the taxicab distance between two user locations
-        /// </summary>
-        /// <param name="location1">The first users location</param>
-        /// <param name="location2">The second users location</param>
-        /// <returns>The taxi cab distance in float form</returns>
-        public static float GetDistance(string location1, string location2)
-        {
-            int[] coords1 = Array.ConvertAll(location1.Split(","), int.Parse);
-            int[] coords2 = Array.ConvertAll(location2.Split(","), int.Parse);
-            float distance = Math.Abs(coords1[0] - coords2[0]) + Math.Abs(coords1[1] - coords2[1]);
-            return distance;
-        }
-        
-        /// <summary>
-        /// Returns the distance to travel between three locations. Useful when finding
-        /// how long a trip will take for a deliverer.
-        /// </summary>
-        /// <param name="location1">The first users location, often the deliverer</param>
-        /// <param name="location2">The second users location, often the restaurant/client</param>
-        /// <param name="location3">The third and final location, often the destination/customer</param>
-        /// <returns>The taxi cab distance in float form</returns>
-        public static float TotalDistance(string location1, string location2, string location3)
-        {
-            return GetDistance(location1, location2) + GetDistance(location2, location3);
+                "\nName: " + Name + "" +
+                "\nAge: " + Age + "" +
+                "\nEmail: " + Email + "" +
+                "\nMobile: " + Mobile;
         }
     }
 }

@@ -1,32 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Arriba_Delivery
+﻿namespace Arriba_Delivery
 {
+    /// <summary>
+    /// A class for food. Used in the Client class
+    /// as a menu and in the Order class to show its contents
+    /// </summary>
     class Food
     {
-        public string name { get; private set; }
-        public float price { get; private set; }
+        public string Name { get; private set; } //The name of the food
+        public float Price { get; private set; } //The price of the food
 
-        public int quantity { get; private set; }
+        public int Quantity { get; private set; } //The qantity of the food
        
+        /// <summary>
+        ///  Initialises the food class
+        /// </summary>
+        /// <param name="quantity">Default is one</param>
         public Food(string name, float price, int quantity = 1)
         {
-            this.name = name;
-            this.price = price;
-            this.quantity = quantity;
+            Name = name;
+            Price = price;
+            Quantity = quantity;
         }
 
-        public void ChangeQuantity(int quantity)
+        /// <summary>
+        /// Changes the quantity of the food, usually
+        /// when the same food item is added to an
+        /// order.
+        /// </summary>
+        /// <param name="newquantity">The updated quantity</param>
+        public void ChangeQuantity(int newquantity)
         {
-            this.quantity = quantity;
+            Quantity = newquantity;
         }
 
     }

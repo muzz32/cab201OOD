@@ -1,24 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml;
-
-namespace Arriba_Delivery
+﻿namespace Arriba_Delivery
 {
-    class CMD
+    /// <summary>
+    /// A class for handling command line inputs and outputs.
+    /// As this project is a prototype, this class would
+    /// likely be replaced with a GUI class. All methods
+    /// are static so a Cmd class cant be initialised. 
+    /// </summary>
+    static class Cmd
     {
+        /// <summary>
+        /// Writes out a message to the line if the message isn't empty.
+        /// </summary>
+        /// <param name="msg">The message to be displayed</param>
         public static void Display(string msg){
             if (msg != "")
             {
                 Console.WriteLine(msg);
             }
         }
+        
+        /// <summary>
+        /// Returns a string only if the input isn't null, otherwise the
+        /// user will be reprompted.
+        /// </summary>
+        /// <param name="errMsg">The message displayed if the string is null</param>
+        /// <param name="retryMsg">The message displayed to prompt the user to enter a new string</param>
+        /// <returns>A non null string</returns>
         public static string StrIn(string errMsg, string retryMsg)
         {
             string? input = Console.ReadLine();
@@ -30,182 +37,58 @@ namespace Arriba_Delivery
             }
             return input;
         }
+        
+        /// <summary>
+        /// Allows for an empty string to be entered
+        /// </summary>
+        /// <returns>A non null empty string</returns>
         public static string EmptyStrIn()
         {
             return Console.ReadLine() ?? "";
         }
+        
+        /// <summary>
+        /// Returns an integer only if the input can be parsed as an int
+        /// </summary>
+        /// <param name="errMsg">The message displayed if the integer is null</param>
+        /// <param name="retryMsg">The message displayed to prompt the user to enter a new integer</param>
+        /// <returns>A non null integer</returns>
         public static int IntIn(string errMsg, string retryMsg)
         {
             string? input = Console.ReadLine();
-            while (!int.TryParse(input, out int output) || input == null)
+            int output;
+            while (!int.TryParse(input, out output))
             {
                 Display(errMsg);
                 Display(retryMsg);
                 input = Console.ReadLine();
             }
-            return int.Parse(input);
+            return output;
         }
+        /// <summary>
+        /// Same process as IntIn only for floats
+        /// </summary>
+        /// <returns>A non null float</returns>
         public static float FloatIn(string errMsg, string retryMsg)
         {
             string? input = Console.ReadLine();
-            while (!float.TryParse(input, out float output) || input == null)
+            float output;
+            while (!float.TryParse(input, out output))
             {
                 Display(errMsg);
                 Display(retryMsg);
                 input = Console.ReadLine();
             }
-            return float.Parse(input);
-        }
-
-        public static string ValidateInput(string regularExpression, string prompt, string errorMsg, bool notempty = true)
-        {
-            string input;
-            do
-            {
-                Display(prompt);
-                input = notempty ? StrIn(errorMsg, prompt) :  EmptyStrIn();
-
-                if (!notempty && input == "")
-                {
-                    return input;
-                }
-                
-                if (!Regex.IsMatch(input, regularExpression))
-                {
-                    Display(errorMsg);
-                }
-                else
-                {
-                    return input;
-                }
-            } while (true);
-        }
-
-        public static int ValidateInput(int min, int max, string prompt, string errorMsg)
-        {
-            do
-            {
-                Display(prompt);
-                int input = IntIn(errorMsg, prompt);
-                if (input < min || input > max)
-                {
-                    Display(errorMsg);
-                }
-                else
-                {
-                    return input;
-                }
-            } while (true);
-        }
-        public static float ValidateInput(float min, float max, string prompt, string errorMsg)
-        {
-            do
-            {
-                Display(prompt);
-                float input = FloatIn(errorMsg, prompt);
-                if (input < min || input > max)
-                {
-                    Display(errorMsg);
-                }
-                else
-                {
-                    return input;
-                }
-            } while (true);
-        }
-        public static string ValidateInput(int min, string regex,string prompt, string errorMsg, bool mustbemin)
-        {
-            string input;
-            do
-            {
-                Display(prompt);
-                input = StrIn(errorMsg, prompt);
-                bool firstparam = mustbemin ? input.Length != min: input.Length < min;
-                if (firstparam || !Regex.IsMatch(input, regex))
-                {
-                    Display(errorMsg);
-                }
-                else
-                {
-                    return input;
-                }
-            } while (true);
-        }
-
-        public static string ValidateEmail(List<User> users)
-        {
-            string email;
-            do
-            {
-                email = ValidateInput(@"^.+@.+$", "Please enter your email address:", "Invalid email address.");
-                if (users.Any(i => i.email == email))
-                {
-                    Display("This email address is already in use.");
-                }
-                else
-                {
-                    return email;
-                }
-            } while (true);
-        }
-
-        public static string ValidatePassword()
-        {
-            do
-            {
-                string password = ValidateInput(8,@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]+$", Consts.passwdprompt, "Invalid password.", false);
-                Display("Please confirm your password:");
-                if (password != StrIn("Invalid password.", "Please confirm your password:"))
-                {
-                    Display("Passwords do not match.");
-                }
-                else
-                {
-                    return password;
-                }
-            } while (true);
-        }
-
-        public static string[] FormatedList<T>(List<T> inputlist, Func<T, string> format)
-        {
-            List<string> stringitems = new List<string>();
-            foreach (var item in inputlist)
-            {
-                stringitems.Add(format(item));
-            }
-            return stringitems.ToArray();
+            return output;
         }
         
-        public static void DisplayObjects<T>(List<T> objects, Func<T, string> format, string emptymsg)
-        {
-            string output = "";
-            if (objects.Count == 0)
-            {
-                Display(emptymsg);
-            }
-            foreach (var item in objects)
-            {
-                output += format(item);
-            }
-            Display(output);
-        }
-        
-        public static (string[], List<T>) GetOptionsAndList<T>(Func<T, bool> condition, List<T> objects, Func<T, string> format, string finaloption)
-        {
-            List<string> stringitems = new List<string>();
-            List<T> filteredlist = new List<T>();
-            foreach (var item in objects)
-            {
-                if (item is T genericitem && condition(genericitem))
-                {
-                    filteredlist.Add(item);
-                    stringitems.Add(format(genericitem));
-                }
-            }
-            stringitems.Add(finaloption);
-            return (stringitems.ToArray(), filteredlist);
-        }
-        
+        /// <summary>
+        /// Displays a menu of options starting from one, and takes a user input as a
+        /// selection if it is within the bound of the options.
+        /// </summary>
+        /// <param name="title">The menu's title</param>
+        /// <param name="options">An array of options</param>
+        /// <returns>An int that can be used to determine the users choice</returns>
         public static int Choice(string title ,params string[] options) 
         {
 
