@@ -170,7 +170,14 @@ namespace Arriba_Delivery
                 case 5:
                     return; 
             }
-            index = CMD.Choice(Consts.restaurant_options_title, customer.DisplayClients(clients));
+            string[] displayclients = CMD.FormatedList(clients, client => $"" + $"{client.restaurant,-20}" + $"{client.location,-7}" +
+                                                $"{User.GetDistance(customer.location, client.location),-7}" +
+                                                $"{Consts.styles[client.style - 1],-12}" +
+                                                $"{client.rating,-6}").Append("Return to the previous menu").ToArray();
+            
+            
+            index = CMD.Choice(Consts.restaurant_options_title, displayclients);
+
             if (index == clients.Count + 1) return;
             CMD.Display($"Placing order from {clients[index - 1].restaurant}.");
             OrderMenu(customer, clients[index-1]);

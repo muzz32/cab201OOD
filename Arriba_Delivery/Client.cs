@@ -92,31 +92,16 @@ namespace Arriba_Delivery
             orders.Add(order);
         }
 
-        
+
         public void ProcessOrder(int processtype, int status)
         {
-            (string[], List<Order>) options = GetSpecificOrders(status);
+            (string[], List<Order>) options = CMD.GetOptionsAndList(order => order.status == Consts.status[status],
+                orders, order => order.GetSimpleString(), "Return to the previous menu");
             int choice = CMD.Choice(Consts.processing_menu[processtype], options.Item1);
             if (choice < options.Item1.Length)
             {
-                options.Item2[choice-1].ProcessOrder(status+1);
+                options.Item2[choice - 1].ProcessOrder(status + 1);
             }
-        }
-
-        private (string[], List<Order>) GetSpecificOrders(int status)
-        {
-            List<string> stringitems = new List<string>();
-            List<Order> specorders = new List<Order>();
-            foreach (Order order in orders)
-            {
-                if (order.status == Consts.status[status])
-                {
-                    specorders.Add(order);
-                    stringitems.Add(order.GetSimpleString());
-                }
-            }
-            stringitems.Add("Return to the previous menu");
-            return (stringitems.ToArray(), specorders);
         }
 
         public void HandOutOrder()

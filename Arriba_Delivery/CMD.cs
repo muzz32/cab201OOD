@@ -189,7 +189,22 @@ namespace Arriba_Delivery
             }
             Display(output);
         }
-
+        
+        public static (string[], List<T>) GetOptionsAndList<T>(Func<T, bool> condition, List<T> objects, Func<T, string> format, string finaloption)
+        {
+            List<string> stringitems = new List<string>();
+            List<T> filteredlist = new List<T>();
+            foreach (var item in objects)
+            {
+                if (item is T genericitem && condition(genericitem))
+                {
+                    filteredlist.Add(item);
+                    stringitems.Add(format(genericitem));
+                }
+            }
+            stringitems.Add(finaloption);
+            return (stringitems.ToArray(), filteredlist);
+        }
         
         public static int Choice(string title ,params string[] options) 
         {
